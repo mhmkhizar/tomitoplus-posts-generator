@@ -782,56 +782,56 @@ ${Array.from({length: episodeCount}, (_, episode) => `
       }
 
       function generateWhatsAppContent(data, dubbedLanguages, subtitleLanguages) {
-        const contentType = document.getElementById('contentType').value;
-        let downloadLinks = '';
+  const contentType = document.getElementById('contentType').value;
+  let downloadLinks = '';
 
-        if (contentType === 'Series') {
-  // Generate series download links
-  downloadLinks = `\n`;
+  if (contentType === 'Series') {
+    // Generate series download links
+    downloadLinks = `\n`;
 
-  Object.entries(seasonData).forEach(([season, episodeCount]) => {
-    if (!episodeCount) return;
+    Object.entries(seasonData).forEach(([season, episodeCount]) => {
+      if (!episodeCount) return;
 
-    for (let episode = 1; episode <= episodeCount; episode++) {
-      // Add Season and Episode in a single line
-      downloadLinks += `> *Season ${season.toString().padStart(2, '0')}* - *Episode ${episode.toString().padStart(2, '0')}*\n`;
+      for (let episode = 1; episode <= episodeCount; episode++) {
+        // Add Season and Episode in a single line
+        downloadLinks += `> *Season ${season.toString().padStart(2, '0')}* - *Episode ${episode.toString().padStart(2, '0')}*\n`;
 
-      // Add each quality and its link below the season-episode line
-      Array.from(document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked'))
-        .forEach(cb => {
-          const link = document.getElementById(`downloadLink_s${season}e${episode}_${cb.value}`).value;
-          if (link) {
-            downloadLinks += `- ${cb.value}: ${link}\n`;
-          }
-        });
+        // Add each quality and its link below the season-episode line
+        Array.from(document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked'))
+          .forEach(cb => {
+            const link = document.getElementById(`downloadLink_s${season}e${episode}_${cb.value}`).value;
+            if (link) {
+              downloadLinks += `- ${cb.value}: ${link}\n`;
+            }
+          });
+      }
+    });
+  } else {
+    // Generate movie download links
+    const checkedQualities = Array.from(document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked'))
+      .map(cb => ({
+        quality: cb.value,
+        link: document.getElementById(`downloadLink${cb.value}`).value
+      }))
+      .filter(({link}) => link);
+
+    if (checkedQualities.length > 0) {
+      downloadLinks = '\n' + checkedQualities
+        .map(({quality, link}) => `- ${quality}: ${link}`)
+        .join('\n');
     }
-  });
-} else {
-          // Generate movie download links
-          const checkedQualities = Array.from(document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked'))
-            .map(cb => ({
-              quality: cb.value,
-              link: document.getElementById(`downloadLink${cb.value}`).value
-            }))
-            .filter(({link}) => link);
+  }
 
-          if (checkedQualities.length > 0) {
-            downloadLinks = '\n' + checkedQualities
-              .map(({quality, link}) => `- ${quality}: ${link}`)
-              .join('\n');
-          }
-        }
-
-        return `💫 *${data.Title} (${data.Year})*
+  return `💫 *${data.Title} (${data.Year})*
 
 - *Type:* ${contentType}
-- *Language(s):* ${dubbedLanguages}
+- *Language(s):* ${data.Language}, ${dubbedLanguages}
 - *Genre(s):* ${data.Genre}
 - *IMDb Votes:* ${data.imdbVotes}
 - *IMDb Rating:* ${data.imdbRating}
 
 💫 *Download Now* ${downloadLinks}`;
-      }
+}
 
       function fetchMovieInfo(event) {
         event.preventDefault();
