@@ -150,6 +150,20 @@
         color: #1ce783;
       }
 
+      .episode-group {
+        margin-left: 1rem;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background: #1f1f1f;
+        border-radius: 0.5rem;
+      }
+
+      .episode-title {
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+        color: #e0e0e0;
+      }
+
       button {
         padding: 1rem 1.5rem;
         background-color: #1ce783;
@@ -171,7 +185,6 @@
       button:active {
         transform: translateY(0);
       }
-
       .result {
         display: none;
         background-color: #2d2d2d;
@@ -325,59 +338,60 @@
 </head>
 <body>
     <div class="container">
-        <h1>Tomito+ Posts Generator</h1>
-        <form id="generatorForm" onsubmit="fetchMovieInfo(event)">
-            <input
-                type="text"
-                id="imdbID"
-                placeholder="Enter IMDb ID (e.g., tt3896198)"
-                required
-                autocomplete="off"
-            />
-            <input
-                type="text"
-                id="dubbedLanguages"
-                placeholder="Enter Dubbed Language(s)"
-                required
-                autocomplete="on"
-            />
-            <input
-                type="text"
-                id="subtitleLanguages"
-                placeholder="Enter Subtitle Language(s)"
-                required
-                autocomplete="on"
-            />
-            <select id="contentType" onchange="handleContentTypeChange()">
-                <option value="Movie">Movie</option>
-                <option value="Series">Series</option>
-            </select>
-            <div id="seriesOptions" style="display: none;">
-                <select id="seasonCount" onchange="handleSeasonCountChange()">
-                    <option value="">Season Count?</option>
-                </select>
-            </div>
-            <div id="qualityOptions" class="checkbox-group">
-                <label class="checkbox-label">
-                    <input type="checkbox" value="SD (360p)" onchange="handleQualityChange(this)"> SD (360p)
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" value="ED (480p)" onchange="handleQualityChange(this)"> ED (480p)
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" value="HD (720p)" onchange="handleQualityChange(this)"> HD (720p)
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" value="FULL-HD (1080p)" onchange="handleQualityChange(this)"> FULL-HD (1080p)
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" value="ULTRA-HD/4K (2160p)" onchange="handleQualityChange(this)"> ULTRA-HD/4K (2160p)
-                </label>
-            </div>
-            <div id="downloadLinksGroup" class="download-links-group"></div>
-            <button type="submit">Get Info</button>
-        </form>
-        <div class="result" id="result">
+      <h1>Tomito+ Posts Generator</h1>
+      <form id="generatorForm" onsubmit="fetchMovieInfo(event)">
+        <input
+          type="text"
+          id="imdbID"
+          placeholder="Enter IMDb ID (e.g., tt3896198)"
+          required
+          autocomplete="off"
+        />
+        <input
+          type="text"
+          id="dubbedLanguages"
+          placeholder="Enter Dubbed Language(s)"
+          required
+          autocomplete="on"
+        />
+        <input
+          type="text"
+          id="subtitleLanguages"
+          placeholder="Enter Subtitle Language(s)"
+          required
+          autocomplete="on"
+        />
+        <select id="contentType" onchange="handleContentTypeChange()">
+          <option value="Movie">Movie</option>
+          <option value="Series">Series</option>
+        </select>
+        <div id="seriesOptions" style="display: none;">
+          <select id="seasonCount" onchange="handleSeasonCountChange()">
+            <option value="">Season Count?</option>
+          </select>
+          <div id="episodeInputs"></div>
+        </div>
+        <div id="qualityOptions" class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" value="SD (360p)" onchange="handleQualityChange(this)"> SD (360p)
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" value="ED (480p)" onchange="handleQualityChange(this)"> ED (480p)
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" value="HD (720p)" onchange="handleQualityChange(this)"> HD (720p)
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" value="FULL-HD (1080p)" onchange="handleQualityChange(this)"> FULL-HD (1080p)
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" value="ULTRA-HD/4K (2160p)" onchange="handleQualityChange(this)"> ULTRA-HD/4K (2160p)
+          </label>
+        </div>
+        <div id="downloadLinksGroup" class="download-links-group"></div>
+        <button type="submit">Get Info</button>
+      </form>
+    <div class="result" id="result">
         <div class="main-section">
           <div class="main-section-title">Website Post</div>
           
@@ -437,176 +451,273 @@
         </div>
     </div>
     <script>
-        const apiKey = "5725af9a";
-        const downloadLinks = {};
-        const qualityOrder = ['SD (360p)', 'ED (480p)', 'HD (720p)', 'FULL-HD (1080p)', 'ULTRA-HD/4K (2160p)'];
-        const seasonData = {};
+      const apiKey = "5725af9a";
+      const downloadLinks = {};
+      const qualityOrder = ['SD (360p)', 'ED (480p)', 'HD (720p)', 'FULL-HD (1080p)', 'ULTRA-HD/4K (2160p)'];
+      const seasonData = {};
 
-        // Initialize season count dropdown
-        const seasonCount = document.getElementById('seasonCount');
-        for (let i = 1; i <= 100; i++) {
-            const option = document.createElement('option');
-            option.value = i;
-            option.textContent = i.toString().padStart(2, '0');
-            seasonCount.appendChild(option);
+      // Initialize season count dropdown
+      const seasonCount = document.getElementById('seasonCount');
+      for (let i = 1; i <= 100; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i.toString().padStart(2, '0');
+        seasonCount.appendChild(option);
+      }
+      
+      async function copyWhatsAppImage() {
+  const img = document.getElementById('whatsappImage');
+  const btn = event.currentTarget;
+  const icon = btn.querySelector('i');
+  
+  // Create a new image element to handle CORS
+  const tempImg = new Image();
+  tempImg.crossOrigin = "anonymous"; // This is important to avoid CORS issues
+  tempImg.src = img.src;
+  
+  tempImg.onload = function() {
+    // Create a canvas element
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Set canvas dimensions to match the loaded image
+    canvas.width = tempImg.width;
+    canvas.height = tempImg.height;
+    
+    // Draw the image onto the canvas
+    ctx.drawImage(tempImg, 0, 0);
+    
+    // Convert canvas content to blob
+    canvas.toBlob(function(blob) {
+      // Create a ClipboardItem with the blob
+      const item = new ClipboardItem({ "image/png": blob });
+      
+      // Write to clipboard
+      navigator.clipboard.write([item])
+        .then(() => {
+          // Show success feedback
+          icon.classList.replace('fa-clipboard', 'fa-check');
+          setTimeout(() => {
+            icon.classList.replace('fa-check', 'fa-clipboard');
+          }, 1000);
+        })
+        .catch((err) => {
+          console.error('Failed to copy image:', err);
+          alert('Failed to copy image. Please try again.');
+        });
+    });
+  };
+  
+  tempImg.onerror = function() {
+    console.error('Failed to load image for copying');
+    alert('Failed to load image. Please try again.');
+  };
+}
+
+      async function copySection(elementId) {
+        const btn = event.currentTarget;
+        const icon = btn.querySelector('i');
+        const text = document.getElementById(elementId).innerText;
+        
+        try {
+          await navigator.clipboard.writeText(text);
+          icon.classList.replace('fa-clipboard', 'fa-check');
+          setTimeout(() => {
+            icon.classList.replace('fa-check', 'fa-clipboard');
+          }, 1000);
+        } catch (err) {
+          console.error('Failed to copy text: ', err);
         }
+      }
 
-        function handleContentTypeChange() {
-            const contentType = document.getElementById('contentType').value;
-            const qualityOptions = document.getElementById('qualityOptions');
-            const seriesOptions = document.getElementById('seriesOptions');
-            const downloadLinksGroup = document.getElementById('downloadLinksGroup');
+      function handleContentTypeChange() {
+        const contentType = document.getElementById('contentType').value;
+        const qualityOptions = document.getElementById('qualityOptions');
+        const seriesOptions = document.getElementById('seriesOptions');
+        const downloadLinksGroup = document.getElementById('downloadLinksGroup');
+        
+        if (contentType === 'Series') {
+          seriesOptions.style.display = 'block';
+          qualityOptions.style.display = 'none';
+          downloadLinksGroup.innerHTML = '';
+          downloadLinksGroup.style.display = 'none';
+        } else {
+          seriesOptions.style.display = 'none';
+          qualityOptions.style.display = 'flex';
+          document.getElementById('episodeInputs').innerHTML = '';
+        }
+        
+        // Reset quality checkboxes validation state
+        qualityOptions.classList.remove('invalid');
+      }
+
+      function handleSeasonCountChange() {
+        const seasonCount = document.getElementById('seasonCount').value;
+        const episodeInputs = document.getElementById('episodeInputs');
+        episodeInputs.innerHTML = '';
+
+        if (seasonCount) {
+          for (let i = 1; i <= seasonCount; i++) {
+            const seasonDiv = document.createElement('div');
+            seasonDiv.innerHTML = `
+              <select id="season${i}Episodes" onchange="handleEpisodeCountChange(${i})">
+                <option value="">Season ${i.toString().padStart(2, '0')} Episode Count?</option>
+                ${Array.from({length: 100}, (_, j) => `<option value="${j + 1}">${(j + 1).toString().padStart(2, '0')}</option>`).join('')}
+              </select>
+            `;
+            episodeInputs.appendChild(seasonDiv);
+          }
+          document.getElementById('qualityOptions').style.display = 'flex';
+        }
+      }
+
+      function handleEpisodeCountChange(season) {
+        const episodeCount = document.getElementById(`season${season}Episodes`).value;
+        seasonData[season] = episodeCount;
+      }
+
+      function handleQualityChange(checkbox) {
+        const downloadLinksGroup = document.getElementById('downloadLinksGroup');
+        const contentType = document.getElementById('contentType').value;
+        const quality = checkbox.value;
+        const qualityOptions = document.getElementById('qualityOptions');
+        
+        if (document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked').length > 0) {
+          qualityOptions.classList.remove('invalid');
+        }
+        
+        if (contentType === 'Series') {
+          if (checkbox.checked) {
+            updateSeriesDownloadLinks();
+          } else {
+            updateSeriesDownloadLinks();
+          }
+        } else {
+          if (checkbox.checked) {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.id = `downloadLink${quality}`;
+            input.placeholder = `Enter ${quality} Download Link`;
+            input.required = true;
+            input.autocomplete = "off";
             
-            if (contentType === 'Series') {
-                seriesOptions.style.display = 'block';
-                qualityOptions.style.display = 'none';
-                downloadLinksGroup.innerHTML = '';
-                downloadLinksGroup.style.display = 'none';
+            const existingInputs = downloadLinksGroup.children;
+            let insertPosition = null;
+            
+            for (let i = 0; i < existingInputs.length; i++) {
+              const currentQuality = existingInputs[i].id.replace('downloadLink', '');
+              if (qualityOrder.indexOf(quality) < qualityOrder.indexOf(currentQuality)) {
+                insertPosition = existingInputs[i];
+                break;
+              }
+            }
+            
+            if (insertPosition) {
+              downloadLinksGroup.insertBefore(input, insertPosition);
             } else {
-                seriesOptions.style.display = 'none';
-                qualityOptions.style.display = 'flex';
+              downloadLinksGroup.appendChild(input);
             }
-            
-            qualityOptions.classList.remove('invalid');
+          } else {
+            const input = document.getElementById(`downloadLink${quality}`);
+            if (input) {
+              input.remove();
+              delete downloadLinks[quality];
+            }
+          }
+        }
+        
+        downloadLinksGroup.style.display = 
+          downloadLinksGroup.children.length > 0 ? 'flex' : 'none';
+      }
+
+      function updateSeriesDownloadLinks() {
+        const downloadLinksGroup = document.getElementById('downloadLinksGroup');
+        downloadLinksGroup.innerHTML = '';
+        
+        const checkedQualities = Array.from(document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked'))
+          .map(cb => cb.value);
+        
+        if (checkedQualities.length === 0) {
+          downloadLinksGroup.style.display = 'none';
+          return;
         }
 
-        function handleSeasonCountChange() {
-            const seasonCount = document.getElementById('seasonCount').value;
-            const qualityOptions = document.getElementById('qualityOptions');
-            seasonData.count = parseInt(seasonCount);
-            
-            if (seasonCount) {
-                qualityOptions.style.display = 'flex';
-                updateDownloadLinks();
-            }
-        }
+        Object.entries(seasonData).forEach(([season, episodeCount]) => {
+          if (!episodeCount) return;
 
-        function handleQualityChange(checkbox) {
-            const contentType = document.getElementById('contentType').value;
-            const qualityOptions = document.getElementById('qualityOptions');
-            
-            if (document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked').length > 0) {
-                qualityOptions.classList.remove('invalid');
-            }
-            
-            if (contentType === 'Series') {
-                updateDownloadLinks();
-            } else {
-                updateMovieDownloadLinks(checkbox);
-            }
-        }
+          const seasonGroup = document.createElement('div');
+          seasonGroup.className = 'season-group';
+          seasonGroup.innerHTML = `<div class="season-title">Season ${season.toString().padStart(2, '0')}</div>`;
 
-        function updateDownloadLinks() {
-            const downloadLinksGroup = document.getElementById('downloadLinksGroup');
-            const checkedQualities = Array.from(document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked'))
-                .map(cb => cb.value);
-            
-            if (!seasonData.count || checkedQualities.length === 0) {
-                downloadLinksGroup.style.display = 'none';
-                return;
-            }
+          for (let episode = 1; episode <= episodeCount; episode++) {
+            const episodeGroup = document.createElement('div');
+            episodeGroup.className = 'episode-group';
+            episodeGroup.innerHTML = `
+              <div class="episode-title">Episode ${episode.toString().padStart(2, '0')}</div>
+              ${checkedQualities.map(quality => `
+                <input
+                  type="text"
+                  id="downloadLink_s${season}e${episode}_${quality}"
+                  placeholder="Enter ${quality} download link"
+                  required
+                  autocomplete="off"
+                />
+              `).join('')}
+            `;
+            seasonGroup.appendChild(episodeGroup);
+          }
 
-            downloadLinksGroup.innerHTML = '';
-            
-            for (let season = 1; season <= seasonData.count; season++) {
-                const seasonGroup = document.createElement('div');
-                seasonGroup.className = 'season-group';
-                seasonGroup.innerHTML = `
-                    <div class="season-title">Season ${season.toString().padStart(2, '0')}</div>
-                    ${checkedQualities.map(quality => `
-                        <input
-                            type="text"
-                            id="downloadLink_s${season}_${quality}"
-                            placeholder="Enter ${quality} Download Link"
-                            required
-                            autocomplete="off"
-                        />
-                    `).join('')}
-                `;
-                downloadLinksGroup.appendChild(seasonGroup);
-            }
-            
-            downloadLinksGroup.style.display = 'flex';
-        }
+          downloadLinksGroup.appendChild(seasonGroup);
+        });
 
-        function updateMovieDownloadLinks(checkbox) {
-            const downloadLinksGroup = document.getElementById('downloadLinksGroup');
-            const quality = checkbox.value;
-            
-            if (checkbox.checked) {
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.id = `downloadLink${quality}`;
-                input.placeholder = `Enter ${quality} Download Link`;
-                input.required = true;
-                input.autocomplete = "off";
-                
-                const existingInputs = downloadLinksGroup.children;
-                let insertPosition = null;
-                
-                for (let i = 0; i < existingInputs.length; i++) {
-                    const currentQuality = existingInputs[i].id.replace('downloadLink', '');
-                    if (qualityOrder.indexOf(quality) < qualityOrder.indexOf(currentQuality)) {
-                        insertPosition = existingInputs[i];
-                        break;
-                    }
-                }
-                
-                if (insertPosition) {
-                    downloadLinksGroup.insertBefore(input, insertPosition);
-                } else {
-                    downloadLinksGroup.appendChild(input);
-                }
-            } else {
-                const input = document.getElementById(`downloadLink${quality}`);
-                if (input) {
-                    input.remove();
-                    delete downloadLinks[quality];
-                }
-            }
-            
-            downloadLinksGroup.style.display = 
-                downloadLinksGroup.children.length > 0 ? 'flex' : 'none';
-        }
+        downloadLinksGroup.style.display = 'flex';
+      }
 
-        function generateWordPressCode(data, dubbedLanguages, subtitleLanguages, posterUrl1080) {
-            const contentType = document.getElementById('contentType').value;
-            
-            let downloadSection = '';
-            if (contentType === 'Series') {
-                downloadSection = `
+      function generateWordPressCode(data, dubbedLanguages, subtitleLanguages, posterUrl1080) {
+        const contentType = document.getElementById('contentType').value;
+        
+        let downloadSection = '';
+        if (contentType === 'Series') {
+          downloadSection = `
 <!-- wp:heading {"textAlign":"left"} -->
 <h2 class="wp-block-heading has-text-align-left">Download Links</h2>
 <!-- /wp:heading -->
 
-${Array.from({length: seasonData.count}, (_, i) => i + 1).map(season => `
+${Object.entries(seasonData).map(([season, episodeCount]) => `
 <!-- wp:group {"layout":{"type":"constrained"}} -->
 <div class="wp-block-group"><!-- wp:heading {"textAlign":"left","level":3} -->
 <h3 class="wp-block-heading has-text-align-left">Season ${season.toString().padStart(2, '0')}</h3>
 <!-- /wp:heading -->
 
+${Array.from({length: episodeCount}, (_, episode) => `
+<!-- wp:group {"layout":{"type":"constrained"}} -->
+<div class="wp-block-group"><!-- wp:heading {"level":5} -->
+<h5 class="wp-block-heading">Episode ${(episode + 1).toString().padStart(2, '0')}</h5>
+<!-- /wp:heading -->
+
 <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"left","orientation":"horizontal"}} -->
 <div class="wp-block-buttons">${Array.from(document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked'))
-    .map(cb => `<!-- wp:button {"className":"is-style-outline"} -->
-<div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="${document.getElementById(`downloadLink_s${season}_${cb.value}`).value}">${cb.value}</a></div>
+  .map(cb => `<!-- wp:button {"className":"is-style-outline"} -->
+<div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="${document.getElementById(`downloadLink_s${season}e${episode + 1}_${cb.value}`).value}">${cb.value}</a></div>
 <!-- /wp:button -->`).join('\n')}</div>
 <!-- /wp:buttons --></div>
+<!-- /wp:group -->`).join('\n')}
+</div>
 <!-- /wp:group -->`).join('\n')}`;
-            } else {
-                // Movie download section remains unchanged
-                const checkedQualities = qualityOrder.filter(quality => 
-                    document.querySelector(`#qualityOptions input[value="${quality}"]`).checked
-                );
-                
-                checkedQualities.forEach(quality => {
-                    const input = document.getElementById(`downloadLink${quality}`);
-                    if (input) {
-                        downloadLinks[quality] = input.value;
-                    }
-                });
+        } else {
+          const checkedQualities = qualityOrder.filter(quality => 
+            document.querySelector(`#qualityOptions input[value="${quality}"]`).checked
+          );
+          
+          checkedQualities.forEach(quality => {
+            const input = document.getElementById(`downloadLink${quality}`);
+            if (input) {
+              downloadLinks[quality] = input.value;
+            }
+          });
 
-                if (Object.keys(downloadLinks).length > 0) {
-                    downloadSection = `
+          if (Object.keys(downloadLinks).length > 0) {
+            downloadSection = `
 <!-- wp:heading -->
 <h2 class="wp-block-heading">Download Links</h2>
 <!-- /wp:heading -->
@@ -619,10 +730,10 @@ ${Array.from({length: seasonData.count}, (_, i) => i + 1).map(season => `
 <!-- /wp:button -->`)
     .join('\n')}</div>
 <!-- /wp:buttons -->`;
-                }
-            }
+          }
+        }
 
-            return `<!-- wp:image {"sizeSlug":"large","align":"full","className":"alignfull","style":{"border":{"radius":"3px"}}} -->
+        return `<!-- wp:image {"sizeSlug":"large","align":"full","className":"alignfull","style":{"border":{"radius":"3px"}}} -->
 <figure class="wp-block-image alignfull size-large has-custom-border"><img src="${posterUrl1080}" alt="" style="border-radius:3px"/></figure>
 <!-- /wp:image -->
 
@@ -668,169 +779,132 @@ ${Array.from({length: seasonData.count}, (_, i) => i + 1).map(season => `
 <li><strong>Subtitle Language(s):</strong> ${subtitleLanguages}</li>
 <!-- /wp:list-item --></ul>
 <!-- /wp:list -->${downloadSection}`;
-        }
+      }
 
-        function generateWhatsAppContent(data, dubbedLanguages, subtitleLanguages) {
+      function generateWhatsAppContent(data, dubbedLanguages, subtitleLanguages) {
         const contentType = document.getElementById('contentType').value;
         let downloadLinks = '';
 
         if (contentType === 'Series') {
-            downloadLinks = '\n';
-            
-            for (let season = 1; season <= seasonData.count; season++) {
-                downloadLinks += `> Season ${season.toString().padStart(2, '0')}\n`;
-                
-                Array.from(document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked'))
-                    .forEach(cb => {
-                        const link = document.getElementById(`downloadLink_s${season}_${cb.value}`).value;
-                        downloadLinks += `- ${cb.value}: ${link}\n`;
-                    });
-                downloadLinks += '';
-            }
-        } else {
-            const checkedQualities = Array.from(document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked'))
-                .map(cb => ({
-                    quality: cb.value,
-                    link: document.getElementById(`downloadLink${cb.value}`).value
-                }))
-                .filter(({link}) => link);
+  // Generate series download links
+  downloadLinks = `\n`;
 
-            if (checkedQualities.length > 0) {
-                downloadLinks = '\n' + checkedQualities
-                    .map(({quality, link}) => `- ${quality}: ${link}`)
-                    .join('\n');
-            }
+  Object.entries(seasonData).forEach(([season, episodeCount]) => {
+    if (!episodeCount) return;
+
+    for (let episode = 1; episode <= episodeCount; episode++) {
+      // Add Season and Episode in a single line
+      downloadLinks += `> *Season ${season.toString().padStart(2, '0')}* - *Episode ${episode.toString().padStart(2, '0')}*\n`;
+
+      // Add each quality and its link below the season-episode line
+      Array.from(document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked'))
+        .forEach(cb => {
+          const link = document.getElementById(`downloadLink_s${season}e${episode}_${cb.value}`).value;
+          if (link) {
+            downloadLinks += `- ${cb.value}: ${link}\n`;
+          }
+        });
+    }
+  });
+} else {
+          // Generate movie download links
+          const checkedQualities = Array.from(document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked'))
+            .map(cb => ({
+              quality: cb.value,
+              link: document.getElementById(`downloadLink${cb.value}`).value
+            }))
+            .filter(({link}) => link);
+
+          if (checkedQualities.length > 0) {
+            downloadLinks = '\n' + checkedQualities
+              .map(({quality, link}) => `- ${quality}: ${link}`)
+              .join('\n');
+          }
         }
 
         return `💫 *${data.Title} (${data.Year})*
 
 - *Type:* ${contentType}
-- *Language(s):* ${data.Language}, ${dubbedLanguages}
+- *Language(s):* ${dubbedLanguages}
 - *Genre(s):* ${data.Genre}
 - *IMDb Votes:* ${data.imdbVotes}
 - *IMDb Rating:* ${data.imdbRating}
 
 💫 *Download Now* ${downloadLinks}`;
-    }
+      }
 
-        async function copyWhatsAppImage() {
-            const img = document.getElementById('whatsappImage');
-            const btn = event.currentTarget;
-            const icon = btn.querySelector('i');
-            
-            const tempImg = new Image();
-            tempImg.crossOrigin = "anonymous";
-            tempImg.src = img.src;
-            
-            tempImg.onload = function() {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                
-                canvas.width = tempImg.width;
-                canvas.height = tempImg.height;
-                
-                ctx.drawImage(tempImg, 0, 0);
-                
-                canvas.toBlob(function(blob) {
-                    const item = new ClipboardItem({ "image/png": blob });
-                    
-                    navigator.clipboard.write([item])
-                        .then(() => {
-                            icon.classList.replace('fa-clipboard', 'fa-check');
-                            setTimeout(() => {
-                                icon.classList.replace('fa-check', 'fa-clipboard');
-                            }, 1000);
-                        })
-                        .catch((err) => {
-                            console.error('Failed to copy image:', err);
-                            alert('Failed to copy image. Please try again.');
-                        });
-                });
-            };
-            
-            tempImg.onerror = function() {
-                console.error('Failed to load image for copying');
-                alert('Failed to load image. Please try again.');
-            };
+      function fetchMovieInfo(event) {
+        event.preventDefault();
+
+        const contentType = document.getElementById('contentType').value;
+        const qualityOptions = document.getElementById('qualityOptions');
+        
+        // Check if at least one checkbox is selected
+        const checkedBoxes = document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked');
+        if (checkedBoxes.length === 0) {
+          qualityOptions.classList.add('invalid');
+          return;
         }
 
-        async function copySection(elementId) {
-            const btn = event.currentTarget;
-            const icon = btn.querySelector('i');
-            const text = document.getElementById(elementId).innerText;
-            
-            try {
-                await navigator.clipboard.writeText(text);
-                icon.classList.replace('fa-clipboard', 'fa-check');
-                setTimeout(() => {
-                    icon.classList.replace('fa-check', 'fa-clipboard');
-                }, 1000);
-            } catch (err) {
-                console.error('Failed to copy text: ', err);
+        if (contentType === 'Series') {
+          // Validate season and episode selections
+          const seasonCount = document.getElementById('seasonCount').value;
+          if (!seasonCount) {
+            alert('Please select the number of seasons');
+            return;
+          }
+
+          for (let i = 1; i <= seasonCount; i++) {
+            const episodeCount = document.getElementById(`season${i}Episodes`).value;
+            if (!episodeCount) {
+              alert(`Please select the number of episodes for Season ${i}`);
+              return;
             }
+          }
         }
 
-        function fetchMovieInfo(event) {
-            event.preventDefault();
+        const imdbID = document.getElementById("imdbID").value.trim();
+        const dubbedLanguages = document.getElementById("dubbedLanguages").value.trim();
+        const subtitleLanguages = document.getElementById("subtitleLanguages").value.trim();
+        const resultDiv = document.getElementById("result");
+        resultDiv.style.display = "none";
 
-            const contentType = document.getElementById('contentType').value;
-            const qualityOptions = document.getElementById('qualityOptions');
+        fetch(`https://www.omdbapi.com/?i=${imdbID}&apikey=${apiKey}&plot=full`)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.Response === "False") {
+              alert("Movie not found. Please check the IMDb ID.");
+              return;
+            }
+
+            document.getElementById("movieTitleYear").innerText = `${data.Title} (${data.Year})`;
+
+            const posterUrl1080 = data.Poster !== "N/A" 
+              ? data.Poster.replace(/._V1_SX300\./g, '._V1_SX1080.')
+              : "No URL available";
             
-            const checkedBoxes = document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked');
-            if (checkedBoxes.length === 0) {
-                qualityOptions.classList.add('invalid');
-                return;
-            }
+            const posterUrl300 = data.Poster !== "N/A" 
+              ? data.Poster
+              : "No URL available";
+            
+            const wordpressCode = generateWordPressCode(data, dubbedLanguages, subtitleLanguages, posterUrl1080);
+            document.getElementById("wordpressCode").innerText = wordpressCode;
+            document.getElementById("featuredImageUrl").innerText = posterUrl300;
 
-            if (contentType === 'Series') {
-                const seasonCount = document.getElementById('seasonCount').value;
-                if (!seasonCount) {
-                    alert('Please select the number of seasons');
-                    return;
-                }
-            }
+            // Update WhatsApp section
+            document.getElementById("whatsappImage").src = posterUrl1080;
+            document.getElementById("whatsappContent").innerText = generateWhatsAppContent(data, dubbedLanguages, subtitleLanguages);
 
-            const imdbID = document.getElementById("imdbID").value.trim();
-            const dubbedLanguages = document.getElementById("dubbedLanguages").value.trim();
-            const subtitleLanguages = document.getElementById("subtitleLanguages").value.trim();
-            const resultDiv = document.getElementById("result");
-            resultDiv.style.display = "none";
+            resultDiv.style.display = "block";
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+            alert("An error occurred. Please try again later.");
+          });
+      }
 
-            fetch(`https://www.omdbapi.com/?i=${imdbID}&apikey=${apiKey}&plot=full`)
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.Response === "False") {
-                        alert("Movie not found. Please check the IMDb ID.");
-                        return;
-                    }
-
-                    document.getElementById("movieTitleYear").innerText = `${data.Title} (${data.Year})`;
-
-                    const posterUrl1080 = data.Poster !== "N/A" 
-                        ? data.Poster.replace(/._V1_SX300\./g, '._V1_SX1080.')
-                        : "No URL available";
-                    
-                    const posterUrl300 = data.Poster !== "N/A" 
-                        ? data.Poster
-                        : "No URL available";
-                    
-                    const wordpressCode = generateWordPressCode(data, dubbedLanguages, subtitleLanguages, posterUrl1080);
-                    document.getElementById("wordpressCode").innerText = wordpressCode;
-                    document.getElementById("featuredImageUrl").innerText = posterUrl300;
-
-                    document.getElementById("whatsappImage").src = posterUrl1080;
-                    document.getElementById("whatsappContent").innerText = generateWhatsAppContent(data, dubbedLanguages, subtitleLanguages);
-
-                    resultDiv.style.display = "block";
-                })
-                .catch((error) => {
-                    console.error("Error fetching data:", error);
-                    alert("An error occurred. Please try again later.");
-                });
-        }
-
-        // Initialize content type handling
-        handleContentTypeChange();
+      // Initialize content type handling
+      handleContentTypeChange();
     </script>
 </body>
 </html>
