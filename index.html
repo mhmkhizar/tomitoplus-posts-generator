@@ -671,47 +671,47 @@ ${Array.from({length: seasonData.count}, (_, i) => i + 1).map(season => `
         }
 
         function generateWhatsAppContent(data, dubbedLanguages, subtitleLanguages) {
-            const contentType = document.getElementById('contentType').value;
-            let downloadLinks = '';
+        const contentType = document.getElementById('contentType').value;
+        let downloadLinks = '';
 
-            if (contentType === 'Series') {
-                downloadLinks = '\n';
+        if (contentType === 'Series') {
+            downloadLinks = '\n';
+            
+            for (let season = 1; season <= seasonData.count; season++) {
+                downloadLinks += `> Season ${season.toString().padStart(2, '0')}\n`;
                 
-                for (let season = 1; season <= seasonData.count; season++) {
-                    downloadLinks += `> Season ${season.toString().padStart(2, '0')}\n`;
-                    
-                    Array.from(document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked'))
-                        .forEach(cb => {
-                            const link = document.getElementById(`downloadLink_s${season}_${cb.value}`).value;
-                            downloadLinks += `- ${cb.value}: ${link}\n`;
-                        });
-                    downloadLinks += '';
-                }
-            } else {
-                const checkedQualities = Array.from(document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked'))
-                    .map(cb => ({
-                        quality: cb.value,
-                        link: document.getElementById(`downloadLink${cb.value}`).value
-                    }))
-                    .filter(({link}) => link);
-
-                if (checkedQualities.length > 0) {
-                    downloadLinks = '\n' + checkedQualities
-                        .map(({quality, link}) => `- ${quality}: ${link}`)
-                        .join('\n');
-                }
+                Array.from(document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked'))
+                    .forEach(cb => {
+                        const link = document.getElementById(`downloadLink_s${season}_${cb.value}`).value;
+                        downloadLinks += `- ${cb.value}: ${link}\n`;
+                    });
+                downloadLinks += '';
             }
+        } else {
+            const checkedQualities = Array.from(document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked'))
+                .map(cb => ({
+                    quality: cb.value,
+                    link: document.getElementById(`downloadLink${cb.value}`).value
+                }))
+                .filter(({link}) => link);
 
-            return `💫 *${data.Title} (${data.Year})*
+            if (checkedQualities.length > 0) {
+                downloadLinks = '\n' + checkedQualities
+                    .map(({quality, link}) => `- ${quality}: ${link}`)
+                    .join('\n');
+            }
+        }
+
+        return `💫 *${data.Title} (${data.Year})*
 
 - *Type:* ${contentType}
-- *Language(s):* ${dubbedLanguages}
+- *Language(s):* ${data.Language}, ${dubbedLanguages}
 - *Genre(s):* ${data.Genre}
 - *IMDb Votes:* ${data.imdbVotes}
 - *IMDb Rating:* ${data.imdbRating}
 
 💫 *Download Now* ${downloadLinks}`;
-        }
+    }
 
         async function copyWhatsAppImage() {
             const img = document.getElementById('whatsappImage');
