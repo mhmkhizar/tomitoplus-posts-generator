@@ -333,6 +333,12 @@
           required
           autocomplete="off"
         />
+        <input
+          type="text"
+          id="dubbedLanguages"
+          placeholder="Enter Dubbed Language(s) (Optional)"
+          autocomplete="on"
+        />
         <select id="contentType" onchange="handleContentTypeChange()">
           <option value="Movie">Movie</option>
           <option value="Series">Series</option>
@@ -585,7 +591,7 @@
         }
       }
 
-      function generateWordPressCode(data, posterUrl1080) {
+      function generateWordPressCode(data, dubbedLanguages, posterUrl1080) {
         const contentType = document.getElementById('contentType').value;
         
         let downloadSection = '';
@@ -647,6 +653,9 @@ ${Array.from({length: seasonData.count}, (_, i) => {
           }
         }
 
+        // Combine original language with dubbed languages if provided
+        const languages = dubbedLanguages ? `${data.Language}, ${dubbedLanguages}` : data.Language;
+
         return `<!-- wp:image {"sizeSlug":"large","align":"full","className":"alignfull","style":{"border":{"radius":"3px"}}} -->
 <figure class="wp-block-image alignfull size-large has-custom-border"><img src="${posterUrl1080}" alt="" style="border-radius:3px"/></figure>
 <!-- /wp:image -->
@@ -682,12 +691,12 @@ ${Array.from({length: seasonData.count}, (_, i) => {
 <!-- /wp:list-item -->
 
 <!-- wp:list-item -->
-<li><strong>Language:</strong> ${data.Language}</li>
+<li><strong>Language(s):</strong> ${languages}</li>
 <!-- /wp:list-item --></ul>
 <!-- /wp:list -->${downloadSection}`;
       }
 
-      function generateWhatsAppContent(data) {
+      function generateWhatsAppContent(data, dubbedLanguages) {
         const contentType = document.getElementById('contentType').value;
         let downloadLinks = '';
 
@@ -720,10 +729,13 @@ ${Array.from({length: seasonData.count}, (_, i) => {
           }
         }
 
+        // Combine original language with dubbed languages if provided
+        const languages = dubbedLanguages ? `${data.Language}, ${dubbedLanguages}` : data.Language;
+
         return `💫 *${data.Title} (${data.Year})*
 
 - *Type:* ${contentType}
-- *Language(s):* ${data.Language}
+- *Language(s):* ${languages}
 - *Genre(s):* ${data.Genre}
 - *IMDb Votes:* ${data.imdbVotes}
 - *IMDb Rating:* ${data.imdbRating}
@@ -754,6 +766,7 @@ ${Array.from({length: seasonData.count}, (_, i) => {
         }
 
         const imdbID = document.getElementById("imdbID").value.trim();
+        const dubbedLanguages = document.getElementById("dubbedLanguages").value.trim();
         const resultDiv = document.getElementById("result");
         resultDiv.style.display = "none";
 
@@ -775,13 +788,13 @@ ${Array.from({length: seasonData.count}, (_, i) => {
               ? data.Poster
               : "No URL available";
             
-            const wordpressCode = generateWordPressCode(data, posterUrl1080);
+            const wordpressCode = generateWordPressCode(data, dubbedLanguages, posterUrl1080);
             document.getElementById("wordpressCode").innerText = wordpressCode;
             document.getElementById("featuredImageUrl").innerText = posterUrl300;
 
             // Update WhatsApp section
             document.getElementById("whatsappImage").src = posterUrl1080;
-            document.getElementById("whatsappContent").innerText = generateWhatsAppContent(data);
+            document.getElementById("whatsappContent").innerText = generateWhatsAppContent(data, dubbedLanguages);
 
             resultDiv.style.display = "block";
           })
