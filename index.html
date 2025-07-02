@@ -336,7 +336,8 @@
         <input
           type="text"
           id="dubbedLanguages"
-          placeholder="Enter Dubbed Language(s) (Optional)"
+          placeholder="Enter Language(s)"
+          required
           autocomplete="on"
         />
         <select id="contentType" onchange="handleContentTypeChange()">
@@ -433,7 +434,6 @@
       const qualityOrder = ['SD (360p)', 'ED (480p)', 'HD (720p)', 'FULL-HD (1080p)', 'ULTRA-HD/4K (2160p)'];
       const seasonData = {};
 
-      // Initialize season count dropdown
       const seasonCount = document.getElementById('seasonCount');
       for (let i = 1; i <= 100; i++) {
         const option = document.createElement('option');
@@ -443,53 +443,45 @@
       }
       
       async function copyWhatsAppImage() {
-  const img = document.getElementById('whatsappImage');
-  const btn = event.currentTarget;
-  const icon = btn.querySelector('i');
-  
-  // Create a new image element to handle CORS
-  const tempImg = new Image();
-  tempImg.crossOrigin = "anonymous"; // This is important to avoid CORS issues
-  tempImg.src = img.src;
-  
-  tempImg.onload = function() {
-    // Create a canvas element
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    
-    // Set canvas dimensions to match the loaded image
-    canvas.width = tempImg.width;
-    canvas.height = tempImg.height;
-    
-    // Draw the image onto the canvas
-    ctx.drawImage(tempImg, 0, 0);
-    
-    // Convert canvas content to blob
-    canvas.toBlob(function(blob) {
-      // Create a ClipboardItem with the blob
-      const item = new ClipboardItem({ "image/png": blob });
-      
-      // Write to clipboard
-      navigator.clipboard.write([item])
-        .then(() => {
-          // Show success feedback
-          icon.classList.replace('fa-clipboard', 'fa-check');
-          setTimeout(() => {
-            icon.classList.replace('fa-check', 'fa-clipboard');
-          }, 1000);
-        })
-        .catch((err) => {
-          console.error('Failed to copy image:', err);
-          alert('Failed to copy image. Please try again.');
-        });
-    });
-  };
-  
-  tempImg.onerror = function() {
-    console.error('Failed to load image for copying');
-    alert('Failed to load image. Please try again.');
-  };
-}
+        const img = document.getElementById('whatsappImage');
+        const btn = event.currentTarget;
+        const icon = btn.querySelector('i');
+        
+        const tempImg = new Image();
+        tempImg.crossOrigin = "anonymous";
+        tempImg.src = img.src;
+        
+        tempImg.onload = function() {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          canvas.width = tempImg.width;
+          canvas.height = tempImg.height;
+          
+          ctx.drawImage(tempImg, 0, 0);
+          
+          canvas.toBlob(function(blob) {
+            const item = new ClipboardItem({ "image/png": blob });
+            
+            navigator.clipboard.write([item])
+              .then(() => {
+                icon.classList.replace('fa-clipboard', 'fa-check');
+                setTimeout(() => {
+                  icon.classList.replace('fa-check', 'fa-clipboard');
+                }, 1000);
+              })
+              .catch((err) => {
+                console.error('Failed to copy image:', err);
+                alert('Failed to copy image. Please try again.');
+              });
+          });
+        };
+        
+        tempImg.onerror = function() {
+          console.error('Failed to load image for copying');
+          alert('Failed to load image. Please try again.');
+        };
+      }
 
       async function copySection(elementId) {
         const btn = event.currentTarget;
@@ -523,7 +515,6 @@
           qualityOptions.style.display = 'flex';
         }
         
-        // Reset quality checkboxes validation state
         qualityOptions.classList.remove('invalid');
       }
 
@@ -557,7 +548,6 @@
         }
 
         if (contentType === 'Series' && seasonData.count) {
-          // Create season-wise download links
           for (let season = 1; season <= seasonData.count; season++) {
             const seasonGroup = document.createElement('div');
             seasonGroup.className = 'season-group';
@@ -577,7 +567,6 @@
           }
           downloadLinksGroup.style.display = 'flex';
         } else if (contentType === 'Movie') {
-          // Create movie download links
           checkedQualities.forEach(quality => {
             const input = document.createElement('input');
             input.type = 'text';
@@ -591,7 +580,7 @@
         }
       }
 
-      function generateWordPressCode(data, dubbedLanguages, posterUrl1080) {
+      function generateWordPressCode(data, userLanguages, posterUrl1080) {
         const contentType = document.getElementById('contentType').value;
         
         let downloadSection = '';
@@ -653,8 +642,7 @@ ${Array.from({length: seasonData.count}, (_, i) => {
           }
         }
 
-        // Combine original language with dubbed languages if provided
-        const languages = dubbedLanguages ? `${data.Language}, ${dubbedLanguages}` : data.Language;
+        const languages = userLanguages;
 
         return `<!-- wp:image {"sizeSlug":"large","align":"full","className":"alignfull","style":{"border":{"radius":"3px"}}} -->
 <figure class="wp-block-image alignfull size-large has-custom-border"><img src="${posterUrl1080}" alt="" style="border-radius:3px"/></figure>
@@ -696,7 +684,7 @@ ${Array.from({length: seasonData.count}, (_, i) => {
 <!-- /wp:list -->${downloadSection}`;
       }
 
-      function generateWhatsAppContent(data, dubbedLanguages) {
+      function generateWhatsAppContent(data, userLanguages) {
         const contentType = document.getElementById('contentType').value;
         let downloadLinks = '';
 
@@ -729,10 +717,9 @@ ${Array.from({length: seasonData.count}, (_, i) => {
           }
         }
 
-        // Combine original language with dubbed languages if provided
-        const languages = dubbedLanguages ? `${data.Language}, ${dubbedLanguages}` : data.Language;
+        const languages = userLanguages;
 
-        return `💫 *${data.Title} (${data.Year})*
+        return `� *${data.Title} (${data.Year})*
 
 - *Type:* ${contentType}
 - *Language(s):* ${languages}
@@ -749,7 +736,6 @@ ${Array.from({length: seasonData.count}, (_, i) => {
         const contentType = document.getElementById('contentType').value;
         const qualityOptions = document.getElementById('qualityOptions');
         
-        // Check if at least one checkbox is selected
         const checkedBoxes = document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked');
         if (checkedBoxes.length === 0) {
           qualityOptions.classList.add('invalid');
@@ -757,7 +743,6 @@ ${Array.from({length: seasonData.count}, (_, i) => {
         }
 
         if (contentType === 'Series') {
-          // Validate season selection
           const seasonCount = document.getElementById('seasonCount').value;
           if (!seasonCount) {
             alert('Please select the number of seasons');
@@ -792,7 +777,6 @@ ${Array.from({length: seasonData.count}, (_, i) => {
             document.getElementById("wordpressCode").innerText = wordpressCode;
             document.getElementById("featuredImageUrl").innerText = posterUrl300;
 
-            // Update WhatsApp section
             document.getElementById("whatsappImage").src = posterUrl1080;
             document.getElementById("whatsappContent").innerText = generateWhatsAppContent(data, dubbedLanguages);
 
@@ -804,7 +788,6 @@ ${Array.from({length: seasonData.count}, (_, i) => {
           });
       }
 
-      // Initialize content type handling
       handleContentTypeChange();
     </script>
 </body>
