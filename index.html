@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tomito+ Posts Generator</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Website Post Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css ">
     <link rel="icon" type="image/png" href="favicon.png" />
     <style>
       * {
@@ -49,7 +49,7 @@
         margin-bottom: 2rem;
       }
 
-      input, select {
+      input {
         width: 100%;
         padding: 0.875rem 1rem;
         border-radius: 0.5rem;
@@ -60,94 +60,18 @@
         transition: all 0.2s ease;
       }
 
-      input:focus, select:focus {
+      input:focus {
         border-color: #1ce783;
         box-shadow: 0 0 0 2px rgba(28, 231, 131, 0.2);
         outline: none;
       }
 
-      input:invalid, select:invalid {
+      input:invalid {
         border-color: #ff4444;
       }
 
-      input::placeholder, select::placeholder {
+      input::placeholder {
         color: #888;
-      }
-
-      select {
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%231ce783' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 1rem center;
-        background-size: 1.2em;
-        padding-right: 2.5rem;
-      }
-
-      .checkbox-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-        padding: 1.25rem;
-        background-color: #2d2d2d;
-        border-radius: 0.5rem;
-        border: 2px solid #404040;
-        position: relative;
-      }
-
-      .checkbox-group.invalid {
-        border-color: #ff4444;
-      }
-
-      .checkbox-group.invalid::after {
-        content: "Please select at least one quality option";
-        position: absolute;
-        bottom: -1.5rem;
-        left: 0;
-        color: #ff4444;
-        font-size: 0.875rem;
-      }
-
-      .checkbox-label {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        cursor: pointer;
-        padding: 0.5rem 1rem;
-        background: #1f1f1f;
-        border-radius: 0.25rem;
-        transition: all 0.2s ease;
-      }
-
-      .checkbox-label:hover {
-        background: #404040;
-      }
-
-      .checkbox-label input[type="checkbox"] {
-        width: 1.125rem;
-        height: 1.125rem;
-        margin: 0;
-        accent-color: #1ce783;
-      }
-
-      .download-links-group {
-        display: none;
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      .season-group {
-        margin-top: 1rem;
-        padding: 1.25rem;
-        background-color: #2d2d2d;
-        border-radius: 0.5rem;
-        border: 2px solid #404040;
-      }
-
-      .season-title {
-        font-size: 1.2rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-        color: #1ce783;
       }
 
       button {
@@ -182,13 +106,6 @@
       .main-section {
         margin-bottom: 2.5rem;
         padding-bottom: 1.5rem;
-        border-bottom: 2px solid #404040;
-      }
-
-      .main-section:last-child {
-        margin-bottom: 0;
-        padding-bottom: 0;
-        border-bottom: none;
       }
 
       .main-section-title {
@@ -273,40 +190,6 @@
         background: #19d074;
       }
 
-      select {
-        scrollbar-width: thin;
-        scrollbar-color: #1ce783 #1a1a1a;
-      }
-
-      select::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-      }
-
-      select::-webkit-scrollbar-track {
-        background: #1a1a1a;
-        border-radius: 4px;
-      }
-
-      select::-webkit-scrollbar-thumb {
-        background: #1ce783;
-        border-radius: 4px;
-      }
-
-      select::-webkit-scrollbar-thumb:hover {
-        background: #19d074;
-      }
-
-      .whatsapp-image {
-        display: block;
-        max-width: 25%;
-        height: auto;
-        margin-left: auto;
-        margin-right: auto;
-        margin-bottom: 1rem;
-        border-radius: 0.5rem;
-      }
-
       @media (max-width: 600px) {
         .container {
           padding: 1.5rem;
@@ -315,16 +198,12 @@
         h1 {
           font-size: 1.5rem;
         }
-
-        .checkbox-group {
-          flex-direction: column;
-        }
       }
     </style>
 </head>
 <body>
     <div class="container">
-      <h1>Tomito+ Posts Generator</h1>
+      <h1>Website Post Generator</h1>
       <form id="generatorForm" onsubmit="fetchMovieInfo(event)">
         <input
           type="text"
@@ -340,34 +219,14 @@
           required
           autocomplete="on"
         />
-        <select id="contentType" onchange="handleContentTypeChange()">
-          <option value="Movie">Movie</option>
-          <option value="Series">Series</option>
-        </select>
-        <div id="seriesOptions" style="display: none;">
-          <select id="seasonCount" onchange="handleSeasonCountChange()">
-            <option value="">Season Count?</option>
-          </select>
-        </div>
-        <div id="qualityOptions" class="checkbox-group">
-          <label class="checkbox-label">
-            <input type="checkbox" value="SD (360p)" onchange="handleQualityChange(this)"> SD (360p)
-          </label>
-          <label class="checkbox-label">
-            <input type="checkbox" value="ED (480p)" onchange="handleQualityChange(this)"> ED (480p)
-          </label>
-          <label class="checkbox-label">
-            <input type="checkbox" value="HD (720p)" onchange="handleQualityChange(this)"> HD (720p)
-          </label>
-          <label class="checkbox-label">
-            <input type="checkbox" value="FULL-HD (1080p)" onchange="handleQualityChange(this)"> FULL-HD (1080p)
-          </label>
-          <label class="checkbox-label">
-            <input type="checkbox" value="ULTRA-HD/4K (2160p)" onchange="handleQualityChange(this)"> ULTRA-HD/4K (2160p)
-          </label>
-        </div>
-        <div id="downloadLinksGroup" class="download-links-group"></div>
-        <button type="submit">Get Info</button>
+        <input
+          type="text"
+          id="driveFolderID"
+          placeholder="Enter Drive Folder ID"
+          required
+          autocomplete="off"
+        />
+        <button type="submit">Get Post</button>
       </form>
     <div class="result" id="result">
         <div class="main-section">
@@ -403,85 +262,9 @@
             <div class="wordpress-code" id="featuredImageUrl"></div>
           </div>
         </div>
-
-        <div class="main-section">
-          <div class="main-section-title">WhatsApp Post</div>
-          
-          <div class="section">
-            <div class="section-header">
-              <div class="section-title">Image</div>
-              <button class="copy-btn" onclick="copyWhatsAppImage()">
-                <i class="fas fa-clipboard"></i>
-              </button>
-            </div>
-            <img id="whatsappImage" class="whatsapp-image" alt="WhatsApp Preview" />
-          </div>
-
-          <div class="section">
-            <div class="section-header">
-              <div class="section-title">Content</div>
-              <button class="copy-btn" onclick="copySection('whatsappContent')">
-                <i class="fas fa-clipboard"></i>
-              </button>
-            </div>
-            <div class="wordpress-code" id="whatsappContent"></div>
-          </div>
-        </div>
     </div>
     <script>
       const apiKey = "5725af9a";
-      const downloadLinks = {};
-      const qualityOrder = ['SD (360p)', 'ED (480p)', 'HD (720p)', 'FULL-HD (1080p)', 'ULTRA-HD/4K (2160p)'];
-      const seasonData = {};
-
-      const seasonCount = document.getElementById('seasonCount');
-      for (let i = 1; i <= 100; i++) {
-        const option = document.createElement('option');
-        option.value = i;
-        option.textContent = i.toString().padStart(2, '0');
-        seasonCount.appendChild(option);
-      }
-      
-      async function copyWhatsAppImage() {
-        const img = document.getElementById('whatsappImage');
-        const btn = event.currentTarget;
-        const icon = btn.querySelector('i');
-        
-        const tempImg = new Image();
-        tempImg.crossOrigin = "anonymous";
-        tempImg.src = img.src;
-        
-        tempImg.onload = function() {
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          
-          canvas.width = tempImg.width;
-          canvas.height = tempImg.height;
-          
-          ctx.drawImage(tempImg, 0, 0);
-          
-          canvas.toBlob(function(blob) {
-            const item = new ClipboardItem({ "image/png": blob });
-            
-            navigator.clipboard.write([item])
-              .then(() => {
-                icon.classList.replace('fa-clipboard', 'fa-check');
-                setTimeout(() => {
-                  icon.classList.replace('fa-check', 'fa-clipboard');
-                }, 1000);
-              })
-              .catch((err) => {
-                console.error('Failed to copy image:', err);
-                alert('Failed to copy image. Please try again.');
-              });
-          });
-        };
-        
-        tempImg.onerror = function() {
-          console.error('Failed to load image for copying');
-          alert('Failed to load image. Please try again.');
-        };
-      }
 
       async function copySection(elementId) {
         const btn = event.currentTarget;
@@ -499,151 +282,7 @@
         }
       }
 
-      function handleContentTypeChange() {
-        const contentType = document.getElementById('contentType').value;
-        const qualityOptions = document.getElementById('qualityOptions');
-        const seriesOptions = document.getElementById('seriesOptions');
-        const downloadLinksGroup = document.getElementById('downloadLinksGroup');
-        
-        if (contentType === 'Series') {
-          seriesOptions.style.display = 'block';
-          qualityOptions.style.display = 'flex';
-          downloadLinksGroup.innerHTML = '';
-          downloadLinksGroup.style.display = 'none';
-        } else {
-          seriesOptions.style.display = 'none';
-          qualityOptions.style.display = 'flex';
-        }
-        
-        qualityOptions.classList.remove('invalid');
-      }
-
-      function handleSeasonCountChange() {
-        const seasonCount = document.getElementById('seasonCount').value;
-        seasonData.count = seasonCount;
-        updateDownloadLinks();
-      }
-
-      function handleQualityChange(checkbox) {
-        updateDownloadLinks();
-      }
-
-      function updateDownloadLinks() {
-        const downloadLinksGroup = document.getElementById('downloadLinksGroup');
-        const contentType = document.getElementById('contentType').value;
-        const qualityOptions = document.getElementById('qualityOptions');
-        
-        downloadLinksGroup.innerHTML = '';
-        
-        if (document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked').length > 0) {
-          qualityOptions.classList.remove('invalid');
-        }
-
-        const checkedQualities = Array.from(document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked'))
-          .map(cb => cb.value);
-        
-        if (checkedQualities.length === 0) {
-          downloadLinksGroup.style.display = 'none';
-          return;
-        }
-
-        if (contentType === 'Series' && seasonData.count) {
-          for (let season = 1; season <= seasonData.count; season++) {
-            const seasonGroup = document.createElement('div');
-            seasonGroup.className = 'season-group';
-            seasonGroup.innerHTML = `<div class="season-title">Season ${season.toString().padStart(2, '0')}</div>`;
-
-            checkedQualities.forEach(quality => {
-              const input = document.createElement('input');
-              input.type = 'text';
-              input.id = `downloadLink_s${season}_${quality}`;
-              input.placeholder = `Enter Season ${season.toString().padStart(2, '0')} ${quality} download link`;
-              input.required = true;
-              input.autocomplete = "off";
-              seasonGroup.appendChild(input);
-            });
-
-            downloadLinksGroup.appendChild(seasonGroup);
-          }
-          downloadLinksGroup.style.display = 'flex';
-        } else if (contentType === 'Movie') {
-          checkedQualities.forEach(quality => {
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.id = `downloadLink${quality}`;
-            input.placeholder = `Enter ${quality} Download Link`;
-            input.required = true;
-            input.autocomplete = "off";
-            downloadLinksGroup.appendChild(input);
-          });
-          downloadLinksGroup.style.display = checkedQualities.length > 0 ? 'flex' : 'none';
-        }
-      }
-
-      function generateWordPressCode(data, userLanguages, posterUrl1080) {
-        const contentType = document.getElementById('contentType').value;
-        
-        let downloadSection = '';
-        if (contentType === 'Series' && seasonData.count) {
-          downloadSection = `
-<!-- wp:heading {"textAlign":"left"} -->
-<h2 class="wp-block-heading has-text-align-left">Download Links</h2>
-<!-- /wp:heading -->
-
-${Array.from({length: seasonData.count}, (_, i) => {
-  const season = i + 1;
-  const checkedQualities = Array.from(document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked'))
-    .map(cb => cb.value);
-  
-  return `<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:heading {"textAlign":"left","level":3} -->
-<h3 class="wp-block-heading has-text-align-left">Season ${season.toString().padStart(2, '0')}</h3>
-<!-- /wp:heading -->
-
-<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group"><!-- wp:buttons {"layout":{"type":"flex","justifyContent":"left","orientation":"horizontal"}} -->
-<div class="wp-block-buttons">${checkedQualities.map(quality => {
-  const linkInput = document.getElementById(`downloadLink_s${season}_${quality}`);
-  const link = linkInput ? linkInput.value : '';
-  return `<!-- wp:button {"className":"is-style-outline"} -->
-<div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="${link}">${quality}</a></div>
-<!-- /wp:button -->`;
-}).join('\n')}</div>
-<!-- /wp:buttons --></div>
-<!-- /wp:group --></div>
-<!-- /wp:group -->`;
-}).join('\n')}`;
-        } else if (contentType === 'Movie') {
-          const checkedQualities = qualityOrder.filter(quality => 
-            document.querySelector(`#qualityOptions input[value="${quality}"]`).checked
-          );
-          
-          checkedQualities.forEach(quality => {
-            const input = document.getElementById(`downloadLink${quality}`);
-            if (input) {
-              downloadLinks[quality] = input.value;
-            }
-          });
-
-          if (Object.keys(downloadLinks).length > 0) {
-            downloadSection = `
-<!-- wp:heading -->
-<h2 class="wp-block-heading">Download Links</h2>
-<!-- /wp:heading -->
-
-<!-- wp:buttons -->
-<div class="wp-block-buttons">${qualityOrder
-    .filter(quality => downloadLinks[quality])
-    .map(quality => `<!-- wp:button {"className":"is-style-outline"} -->
-<div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="${downloadLinks[quality]}">${quality}</a></div>
-<!-- /wp:button -->`)
-    .join('\n')}</div>
-<!-- /wp:buttons -->`;
-          }
-        }
-
-        const languages = userLanguages;
-
+      function generateWordPressCode(data, userLanguages, posterUrl1080, driveFolderID) {
         return `<!-- wp:image {"sizeSlug":"large","align":"full","className":"alignfull","style":{"border":{"radius":"3px"}}} -->
 <figure class="wp-block-image alignfull size-large has-custom-border"><img src="${posterUrl1080}" alt="" style="border-radius:3px"/></figure>
 <!-- /wp:image -->
@@ -657,13 +296,16 @@ ${Array.from({length: seasonData.count}, (_, i) => {
 <!-- /wp:heading -->
 
 <!-- wp:list -->
-<ul class="wp-block-list">
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li id="file-id"><strong>ID:</strong> ${driveFolderID}</li>
+<!-- /wp:list-item -->
+
 <!-- wp:list-item -->
 <li><strong>Title:</strong> ${data.Title}</li>
 <!-- /wp:list-item -->
 
 <!-- wp:list-item -->
-<li><strong>Type:</strong> ${contentType}</li>
+<li><strong>Type:</strong> Movie</li>
 <!-- /wp:list-item -->
 
 <!-- wp:list-item -->
@@ -679,79 +321,29 @@ ${Array.from({length: seasonData.count}, (_, i) => {
 <!-- /wp:list-item -->
 
 <!-- wp:list-item -->
-<li><strong>Language(s):</strong> ${languages}</li>
+<li><strong>Language(s):</strong> ${userLanguages}</li>
 <!-- /wp:list-item --></ul>
-<!-- /wp:list -->${downloadSection}`;
-      }
+<!-- /wp:list -->
 
-      function generateWhatsAppContent(data, userLanguages) {
-        const contentType = document.getElementById('contentType').value;
-        let downloadLinks = '';
-
-        if (contentType === 'Series' && seasonData.count) {
-          downloadLinks = '\n';
-          for (let season = 1; season <= seasonData.count; season++) {
-            downloadLinks += `> *Season ${season.toString().padStart(2, '0')}*\n`;
-            
-            Array.from(document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked'))
-              .forEach(cb => {
-                const linkInput = document.getElementById(`downloadLink_s${season}_${cb.value}`);
-                const link = linkInput ? linkInput.value : '';
-                if (link) {
-                  downloadLinks += `- ${cb.value}: ${link}\n`;
-                }
-              });
-          }
-        } else if (contentType === 'Movie') {
-          const checkedQualities = Array.from(document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked'))
-            .map(cb => ({
-              quality: cb.value,
-              link: document.getElementById(`downloadLink${cb.value}`).value
-            }))
-            .filter(({link}) => link);
-
-          if (checkedQualities.length > 0) {
-            downloadLinks = '\n' + checkedQualities
-              .map(({quality, link}) => `- ${quality}: ${link}`)
-              .join('\n');
-          }
-        }
-
-        const languages = userLanguages;
-
-        return `💫 *${data.Title} (${data.Year})*
-
-- *Type:* ${contentType}
-- *Language(s):* ${languages}
-- *Genre(s):* ${data.Genre}
-- *IMDb Votes:* ${data.imdbVotes}
-- *IMDb Rating:* ${data.imdbRating}
-
-💫 *Download Now* ${downloadLinks}`;
+<!-- wp:html -->
+<div id="file-access-form-container" style="background-color: #1a1a1a; padding: 20px; border-radius: 8px; margin-top: 64px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); color: #f0f0f0;">
+<h3 style="color: #1ce783; margin-top: 0;">Access this file</h3>
+<div id="message" style="margin-bottom: 15px;"></div>
+<div style="margin-bottom: 15px;">
+<input id="user-email" style="width: 100%; padding: 10px; border-radius: 4px; background-color: #2c2c2c; color: #fff;" name="user-email" type="email" placeholder="Enter your Gmail address" />
+</div>
+<p id="get-file-para">
+<button id="get-file-btn" style="width: 100%; padding: 12px; background-color: #1ce783; color: #1a1a1a; border: none; border-radius: 4px; font-size: 16px; font-weight: 600; cursor: pointer;">Get file</button>
+</p>
+</div><!-- /wp:html -->`;
       }
 
       function fetchMovieInfo(event) {
         event.preventDefault();
 
-        const contentType = document.getElementById('contentType').value;
-        const qualityOptions = document.getElementById('qualityOptions');
-        
-        const checkedBoxes = document.querySelectorAll('#qualityOptions input[type="checkbox"]:checked');
-        if (checkedBoxes.length === 0) {
-          qualityOptions.classList.add('invalid');
-          return;
-        }
-
-        if (contentType === 'Series') {
-          const seasonCount = document.getElementById('seasonCount').value;
-          if (!seasonCount) {
-            alert('Please select the number of seasons');
-            return;
-          }
-        }
-
         const imdbID = document.getElementById("imdbID").value.trim();
         const dubbedLanguages = document.getElementById("dubbedLanguages").value.trim();
+        const driveFolderID = document.getElementById("driveFolderID").value.trim();
         const resultDiv = document.getElementById("result");
         resultDiv.style.display = "none";
 
@@ -773,12 +365,9 @@ ${Array.from({length: seasonData.count}, (_, i) => {
               ? data.Poster
               : "No URL available";
             
-            const wordpressCode = generateWordPressCode(data, dubbedLanguages, posterUrl1080);
+            const wordpressCode = generateWordPressCode(data, dubbedLanguages, posterUrl1080, driveFolderID);
             document.getElementById("wordpressCode").innerText = wordpressCode;
             document.getElementById("featuredImageUrl").innerText = posterUrl300;
-
-            document.getElementById("whatsappImage").src = posterUrl1080;
-            document.getElementById("whatsappContent").innerText = generateWhatsAppContent(data, dubbedLanguages);
 
             resultDiv.style.display = "block";
           })
@@ -787,9 +376,6 @@ ${Array.from({length: seasonData.count}, (_, i) => {
             alert("An error occurred. Please try again later.");
           });
       }
-
-      handleContentTypeChange();
     </script>
 </body>
 </html>
-
